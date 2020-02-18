@@ -51,10 +51,10 @@ def compile_advice_genre(genre):
     return full_book_info
 
 
-def compile_advice_random():
-    soup_of_random_book = get_soup('https://www.goodreads.com/book/random')
-    random_book_url = soup_of_random_book.find('link', {'rel':"canonical"}).get('href')
-    soup_of_book = get_soup('https://www.goodreads.com/en/book/show' + random_book_url[35:])
+def compile_advice_most_read(duration):
+    soup_of_most_read_page = get_soup('https://www.goodreads.com/book/most_read?category=all&country=all&duration=' + duration)
+    book_link = make_book_choice_from_page(soup_of_most_read_page)
+    soup_of_book = get_soup('https://www.goodreads.com/book/show/' + book_link)
     full_book_info = get_full_book_info(soup_of_book)
     return full_book_info
 

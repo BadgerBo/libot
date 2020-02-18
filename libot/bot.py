@@ -11,7 +11,7 @@ bot = telebot.TeleBot(token)
 def provide_command_start(message):
     keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
     genres_button = telebot.types.KeyboardButton(text='Genres')
-    random_button = telebot.types.KeyboardButton(text='Random')
+    random_button = telebot.types.KeyboardButton(text='Most Read')
     choice_awards_button = telebot.types.KeyboardButton(text='Choice Awards')
     new_releases_button = telebot.types.KeyboardButton(text='New Releases')
     keyboard.row(genres_button, random_button)
@@ -36,13 +36,8 @@ def provide_command_help(message):
 def handle_general_choice(message):
     if message.text == 'Genres':
         provide_genre_choice(message)
-    elif message.text == 'Random':
-        try:
-            random_book = parser.compile_advice_random()
-            give_book_advice(message, random_book, None)
-        except:
-            random_book = parser.compile_advice_random()
-            give_book_advice(message, random_book, None)
+    elif message.text == 'Most Read':
+        provide_duration_choice(message)
     elif message.text == 'Choice Awards':
         provide_year_choice(message)
     elif message.text == 'New Releases':
@@ -86,6 +81,20 @@ def provide_genre_choice(message):
     bot.send_message(message.chat.id, 'In which genre do you take an interest?', reply_markup=keyboard)
 
 
+def provide_duration_choice(message):
+    keyboard = telebot.types.InlineKeyboardMarkup()
+    keyboard.row(
+        telebot.types.InlineKeyboardButton(text='This Week', callback_data='w'),
+    )
+    keyboard.row(
+        telebot.types.InlineKeyboardButton(text='This Month', callback_data='m'),
+    )
+    keyboard.row(
+        telebot.types.InlineKeyboardButton(text='In The Last 12 Months', callback_data='y'),
+    )
+    bot.send_message(message.chat.id, 'Most Read Books on Goodreads.com', reply_markup=keyboard)
+
+
 def provide_year_choice(message):
     keyboard = telebot.types.InlineKeyboardMarkup()
     keyboard.row(
@@ -116,6 +125,14 @@ def handle_choice_of_genre_or_year(call):
         except:
             choice_awards_book = parser.compile_advice_choice_awards(year)
             give_book_advice(call.message, choice_awards_book, year)
+    elif len(call.data) == 1:
+        duration = call.data
+        try:
+            most_read_book = parser.compile_advice_most_read(duration)
+            give_book_advice(call.message, most_read_book, None)
+        except:
+            most_read_book = parser.compile_advice_most_read(year)
+            give_book_advice(call.message, most_read_book, None)
     else:
         genre = call.data
         try:
