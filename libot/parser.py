@@ -37,8 +37,8 @@ def get_soup(url):
 
 def make_book_choice_from_page(page_soup):
     list_of_books = []
-    for book in page_soup.find_all('a', {'class': "bookTitle"}):
-        book = book.get('href')
+    for book in page_soup.find_all('div', {'class': "stars"}):
+        book = book.get('data-resource-id')
         list_of_books.append(book)
     return random.choice(list_of_books)
 
@@ -46,7 +46,7 @@ def make_book_choice_from_page(page_soup):
 def compile_advice_genre(genre):
     soup_of_genre_page = get_soup('https://www.goodreads.com/shelf/show/' + genre)
     book_link = make_book_choice_from_page(soup_of_genre_page)
-    soup_of_book = get_soup('https://www.goodreads.com/' + book_link)
+    soup_of_book = get_soup('https://www.goodreads.com/book/show/' + book_link)
     full_book_info = get_full_book_info(soup_of_book)
     return full_book_info
 
@@ -62,7 +62,7 @@ def compile_advice_random():
 def compile_advice_choice_awards(year):
     soup_of_year_page = get_soup('https://www.goodreads.com/choiceawards/best-books-' + year)
     book_link = make_book_choice_from_page(soup_of_year_page)
-    soup_of_book = get_soup('https://www.goodreads.com/' + book_link)
+    soup_of_book = get_soup('https://www.goodreads.com/book/show/' + book_link)
     full_book_info = get_full_book_info(soup_of_book)
     return full_book_info
 
@@ -70,6 +70,6 @@ def compile_advice_choice_awards(year):
 def compile_advice_new_releases():
     soup_of_genre_page = get_soup('https://www.goodreads.com/book/popular_by_date/')
     book_link = make_book_choice_from_page(soup_of_genre_page)
-    soup_of_book = get_soup('https://www.goodreads.com/' + book_link)
+    soup_of_book = get_soup('https://www.goodreads.com/book/show/' + book_link)
     full_book_info = get_full_book_info(soup_of_book)
     return full_book_info
