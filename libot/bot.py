@@ -132,9 +132,9 @@ def give_book_advice(message, book, data):
     if data is None:
         pass
     elif len(data) == 1:
-        keyboard.add(telebot.types.InlineKeyboardButton('Another Most read book',
+        keyboard.add(telebot.types.InlineKeyboardButton('Another most read book',
                                                         callback_data=data))
-    elif data[0:1] == '20':
+    elif data[0].isdigit():
         keyboard.add(telebot.types.InlineKeyboardButton('Another best book of {}'.format(data),
                                                         callback_data=data))
     elif data[0].isalpha():
