@@ -41,12 +41,8 @@ def handle_general_choice(message):
     elif message.text == 'Choice Awards':
         provide_year_choice(message)
     elif message.text == 'New Releases':
-        try:
-            new_releases_book = parser.compile_advice_new_releases()
-            give_book_advice(message, new_releases_book, None)
-        except:
-            new_releases_book = parser.compile_advice_new_releases()
-            give_book_advice(message, new_releases_book, None)
+        new_releases_book = parser.compile_advice('https://www.goodreads.com/book/popular_by_date/')
+        give_book_advice(message, new_releases_book, None)
     else:
         pass
 
@@ -112,48 +108,38 @@ def provide_year_choice(message):
         telebot.types.InlineKeyboardButton(text='2012', callback_data='2012'),
         telebot.types.InlineKeyboardButton(text='2011', callback_data='2011'),
     )
-    bot.send_message(message.chat.id, 'Winners of Annual Goodreads Choice Awards', reply_markup=keyboard)
+    bot.send_message(message.chat.id, 'Winners of Annual Goodreads.com Choice Awards', reply_markup=keyboard)
 
 
 @bot.callback_query_handler(func=lambda call: True)
 def handle_choice_of_genre_or_year(call):
-    if call.data[0:1] == '20':
-        year = call.data
-        try:
-            choice_awards_book = parser.compile_advice_choice_awards(year)
-            give_book_advice(call.message, choice_awards_book, year)
-        except:
-            choice_awards_book = parser.compile_advice_choice_awards(year)
-            give_book_advice(call.message, choice_awards_book, year)
-    elif len(call.data) == 1:
-        duration = call.data
-        try:
-            most_read_book = parser.compile_advice_most_read(duration)
-            give_book_advice(call.message, most_read_book, None)
-        except:
-            most_read_book = parser.compile_advice_most_read(year)
-            give_book_advice(call.message, most_read_book, None)
+    if len(call.data) == 1:
+        most_read_book = parser.compile_advice(
+            'https://www.goodreads.com/book/most_read?category=all&country=all&duration=' + call.data)
+        give_book_advice(call.message, most_read_book, call.data)
+    elif call.data[0:1] == '20':
+        choice_awards_book = parser.compile_advice('https://www.goodreads.com/choiceawards/best-books-' + call.data)
+        give_book_advice(call.message, choice_awards_book, call.data)
     else:
-        genre = call.data
-        try:
-            genre_book = parser.compile_advice_genre(genre)
-            give_book_advice(call.message, genre_book, genre)
-        except:
-            genre_book = parser.compile_advice_genre(genre)
-            give_book_advice(call.message, genre_book, genre)
+        genre_book = parser.compile_advice('https://www.goodreads.com/shelf/show/' + call.data)
+        give_book_advice(call.message, genre_book, call.data)
 
 
-def give_book_advice(message, book, flag_for_additional_option):
+
+def give_book_advice(message, book, data):
     keyboard = telebot.types.InlineKeyboardMarkup()
     keyboard.add(telebot.types.InlineKeyboardButton('View on goodreads.com', url=book[0]))
-    if flag_for_additional_option is None:
+    if data is None:
         pass
-    elif flag_for_additional_option[0].isalpha():
+    elif len(data) == 1:
+        keyboard.add(telebot.types.InlineKeyboardButton('Another Most read book',
+                                                        callback_data=data))
+    elif data[0:1] == '20':
+        keyboard.add(telebot.types.InlineKeyboardButton('Another best book of {}'.format(data),
+                                                        callback_data=data))
+    elif data[0].isalpha():
         keyboard.add(telebot.types.InlineKeyboardButton('Another book of this genre',
-                                                        callback_data=flag_for_additional_option))
-    elif flag_for_additional_option[0].isdigit():
-        keyboard.add(telebot.types.InlineKeyboardButton('Another best book of {}'.format(flag_for_additional_option),
-                                                        callback_data=flag_for_additional_option))
+                                                        callback_data=data))
     bot.send_photo(message.chat.id, book[1], book[2], parse_mode="Markdown", reply_markup=keyboard)
 
 

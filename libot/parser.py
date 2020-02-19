@@ -22,14 +22,6 @@ class Book:
         return '*{}*\nby {}\n\nRating: {}\n\n{}'.format(title, author, rating, synopsis)
 
 
-def get_full_book_info(book_soup):
-    book = Book(book_soup)
-    url = book.get_url()
-    cover = book.get_cover()
-    description = book.get_description()
-    return url, cover, description
-
-
 def get_soup(url):
     raw_html = requests.get(url).content
     return BeautifulSoup(raw_html, "html.parser")
@@ -43,33 +35,12 @@ def make_book_choice_from_page(page_soup):
     return random.choice(list_of_books)
 
 
-def compile_advice_genre(genre):
-    soup_of_genre_page = get_soup('https://www.goodreads.com/shelf/show/' + genre)
-    book_link = make_book_choice_from_page(soup_of_genre_page)
-    soup_of_book = get_soup('https://www.goodreads.com/book/show/' + book_link)
-    full_book_info = get_full_book_info(soup_of_book)
-    return full_book_info
-
-
-def compile_advice_most_read(duration):
-    soup_of_most_read_page = get_soup('https://www.goodreads.com/book/most_read?category=all&country=all&duration=' + duration)
-    book_link = make_book_choice_from_page(soup_of_most_read_page)
-    soup_of_book = get_soup('https://www.goodreads.com/book/show/' + book_link)
-    full_book_info = get_full_book_info(soup_of_book)
-    return full_book_info
-
-
-def compile_advice_choice_awards(year):
-    soup_of_year_page = get_soup('https://www.goodreads.com/choiceawards/best-books-' + year)
-    book_link = make_book_choice_from_page(soup_of_year_page)
-    soup_of_book = get_soup('https://www.goodreads.com/book/show/' + book_link)
-    full_book_info = get_full_book_info(soup_of_book)
-    return full_book_info
-
-
-def compile_advice_new_releases():
-    soup_of_genre_page = get_soup('https://www.goodreads.com/book/popular_by_date/')
-    book_link = make_book_choice_from_page(soup_of_genre_page)
-    soup_of_book = get_soup('https://www.goodreads.com/book/show/' + book_link)
-    full_book_info = get_full_book_info(soup_of_book)
-    return full_book_info
+def compile_advice(general_url):
+        soup_of_page = get_soup(general_url)
+        book_id = make_book_choice_from_page(soup_of_page)
+        soup_of_book = get_soup('https://www.goodreads.com/book/show/' + book_id)
+        book = Book(soup_of_book)
+        url = book.get_url()
+        cover = book.get_cover()
+        description = book.get_description()
+        return url, cover, description
