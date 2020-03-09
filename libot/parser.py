@@ -36,11 +36,11 @@ def make_book_choice_from_page(page_soup):
 
 
 def compile_advice(general_url):
-        soup_of_page = get_soup(general_url)
-        book_id = make_book_choice_from_page(soup_of_page)
-        soup_of_book = get_soup('https://www.goodreads.com/book/show/' + book_id)
-        book = Book(soup_of_book)
-        url = book.get_url()
-        cover = book.get_cover()
-        description = book.get_description()
-        return url, cover, description
+    soup_of_page = get_soup(general_url)
+    book_id = make_book_choice_from_page(soup_of_page)
+    soup_of_book = get_soup('https://www.goodreads.com/book/show/' + book_id)
+    book = Book(soup_of_book)
+    url = book.get_url()
+    cover = book.get_cover()
+    description = book.get_description()
+    return url, cover, description
