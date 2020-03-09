@@ -13,9 +13,8 @@ def provide_command_start(message):
     genres_button = telebot.types.KeyboardButton(text='Genres')
     most_read_button = telebot.types.KeyboardButton(text='Most Read')
     choice_awards_button = telebot.types.KeyboardButton(text='Choice Awards')
-    new_releases_button = telebot.types.KeyboardButton(text='New Releases')
-    keyboard.row(genres_button, most_read_button)
-    keyboard.row(choice_awards_button, new_releases_button)
+    keyboard.row(genres_button)
+    keyboard.row(most_read_button, choice_awards_button)
     bot.send_message(message.chat.id,
                      'Greetings, {}\n'.format(message.chat.username) +
                      'I can help you choose your next book\nWhat do you want to read?',
@@ -27,8 +26,8 @@ def provide_command_help(message):
     keyboard = telebot.types.InlineKeyboardMarkup()
     keyboard.add(telebot.types.InlineKeyboardButton('Contact bot\'s creator', url='https://t.me/BadgerBo'))
     bot.send_message(message.chat.id,
-                     'Choose one of the available options:\n1)  Genres\n2)  Random\n3)  Choice Awards\n' +
-                     '4)  New Releases\nThen choose particular genre or year of publication, if necessary',
+                     'Choose one of the available options:\n1)  Genres\n2)  Most Read\n' +
+                     '3)  Choice Awards\n\nThen choose particular genre, duration or year of publication',
                      parse_mode="Markdown", reply_markup=keyboard)
 
 
@@ -40,9 +39,6 @@ def handle_general_choice(message):
         provide_duration_choice(message)
     elif message.text == 'Choice Awards':
         provide_year_choice(message)
-    elif message.text == 'New Releases':
-        new_releases_book = parser.compile_advice('https://www.goodreads.com/book/popular_by_date/')
-        give_book_advice(message, new_releases_book, None)
     else:
         pass
 
@@ -129,9 +125,7 @@ def handle_choice_of_genre_or_year(call):
 def give_book_advice(message, book, data):
     keyboard = telebot.types.InlineKeyboardMarkup()
     keyboard.add(telebot.types.InlineKeyboardButton('View on goodreads.com', url=book[0]))
-    if data is None:
-        pass
-    elif len(data) == 1:
+    if len(data) == 1:
         keyboard.add(telebot.types.InlineKeyboardButton('Another most read book',
                                                         callback_data=data))
     elif data[0].isdigit():
