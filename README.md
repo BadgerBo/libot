@@ -2,7 +2,7 @@
 
 ## Overview
 
-This bot was created to answer the question «Which book I want to read next?» by recommending particular book from [Goodreads.com](https://www.goodreads.com/ "Goodreads | Meet your next favorite book")
+This [bot](https://t.me/BadgerBo_libot "Book Advisor Bot") was created to answer the question «Which book I want to read next?» by recommending particular book from [Goodreads.com](https://www.goodreads.com/ "Goodreads | Meet your next favorite book")
 
 
 ## How does it work
