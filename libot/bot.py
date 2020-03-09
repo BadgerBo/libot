@@ -11,10 +11,10 @@ bot = telebot.TeleBot(token)
 def provide_command_start(message):
     keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
     genres_button = telebot.types.KeyboardButton(text='Genres')
-    random_button = telebot.types.KeyboardButton(text='Most Read')
+    most_read_button = telebot.types.KeyboardButton(text='Most Read')
     choice_awards_button = telebot.types.KeyboardButton(text='Choice Awards')
     new_releases_button = telebot.types.KeyboardButton(text='New Releases')
-    keyboard.row(genres_button, random_button)
+    keyboard.row(genres_button, most_read_button)
     keyboard.row(choice_awards_button, new_releases_button)
     bot.send_message(message.chat.id,
                      'Greetings, {}\n'.format(message.chat.username) +
