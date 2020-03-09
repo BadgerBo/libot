@@ -116,10 +116,9 @@ def handle_choice_of_genre_or_year(call):
     elif call.data.isdigit():
         choice_awards_book = parser.compile_advice('https://www.goodreads.com/choiceawards/best-books-' + call.data)
         give_book_advice(call.message, choice_awards_book, call.data)
-    elif call.data.isalpha():
+    else:
         genre_book = parser.compile_advice('https://www.goodreads.com/shelf/show/' + call.data)
         give_book_advice(call.message, genre_book, call.data)
-
 
 
 def give_book_advice(message, book, data):
@@ -131,7 +130,7 @@ def give_book_advice(message, book, data):
     elif data[0].isdigit():
         keyboard.add(telebot.types.InlineKeyboardButton('Another best book of {}'.format(data),
                                                         callback_data=data))
-    elif data[0].isalpha():
+    else:
         keyboard.add(telebot.types.InlineKeyboardButton('Another book of this genre',
                                                         callback_data=data))
     bot.send_photo(message.chat.id, book[1], book[2], parse_mode="Markdown", reply_markup=keyboard)
