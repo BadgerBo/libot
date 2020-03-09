@@ -113,10 +113,10 @@ def handle_choice_of_genre_or_year(call):
         most_read_book = parser.compile_advice(
             'https://www.goodreads.com/book/most_read?category=all&country=all&duration=' + call.data)
         give_book_advice(call.message, most_read_book, call.data)
-    elif call.data[0:1] == '20':
+    elif call.data.isdigit():
         choice_awards_book = parser.compile_advice('https://www.goodreads.com/choiceawards/best-books-' + call.data)
         give_book_advice(call.message, choice_awards_book, call.data)
-    else:
+    elif call.data.isalpha():
         genre_book = parser.compile_advice('https://www.goodreads.com/shelf/show/' + call.data)
         give_book_advice(call.message, genre_book, call.data)
 
