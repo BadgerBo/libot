@@ -1,10 +1,23 @@
 import telebot
+from flask import Flask, request
 
-from config import token
+from config import TOKEN, URL, SECRET
 import parser
 
 
-bot = telebot.TeleBot(token)
+bot = telebot.TeleBot(TOKEN, threaded=False)
+bot.remove_webhook()
+url = URL + SECRET
+bot.set_webhook(url = url)
+
+
+app = Flask(__name__)
+
+
+@app.route('/{}'.format(SECRET) , methods=["POST"])
+def webhook():
+    bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
+    return "!", 200
 
 
 @bot.message_handler(commands=['start'])
@@ -134,7 +147,3 @@ def give_book_advice(message, book, data):
         keyboard.add(telebot.types.InlineKeyboardButton('Another book of this genre',
                                                         callback_data=data))
     bot.send_photo(message.chat.id, book[1], book[2], parse_mode="Markdown", reply_markup=keyboard)
-
-
-if __name__ == '__main__':
-    bot.polling(none_stop=True)
