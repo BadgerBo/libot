@@ -136,3 +136,6 @@ dmypy.json
 
 # Telegram API token
 config.py
+
+# macOS
+.DS_Store
